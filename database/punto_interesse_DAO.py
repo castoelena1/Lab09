@@ -35,3 +35,29 @@ class PuntoInteresseDAO:
             cnx.close()
 
         return result
+
+    @staticmethod
+    def get_escursione_punti_interesse() -> list | None:
+        cnx = DBConnect.get_connection()
+        result = []
+        if cnx is None:
+            print("Errore di connessione al database.")
+            return None
+        cursor = cnx.cursor(dictionary=True)
+        query = """ SELECT * FROM escursione_punto_interesse"""
+        try:
+            cursor.execute(query)
+            for row in cursor:
+                result.append({
+                    "id_escursione" : row["id_escursione"],
+                    "id_punto_interesse" : row["id_punto_interesse"],
+                })
+        except Exception as e:
+            print(f"Errore durante la query get_escursione_punti_interesse: {e}")
+            result = None
+
+        finally:
+            cursor.close()
+            cnx.close()
+
+        return result
